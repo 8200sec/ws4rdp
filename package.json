@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "pkg --out-path dist . "
+    "build": "pkg --out-path dist . ",
+    "dev":"node dev.js"
   },
   "keywords": [
     "rdp"
