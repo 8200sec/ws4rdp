@@ -26,6 +26,12 @@ npm run-script dev
 npm run-script build
 ```
 
+#### tip:
+build the package for dev
+```bash
+pkg --output ws4rdp-dev --targets node8-macos-x64 --assets ["html/**/*"] dev.js
+```
+
 
 # License
  GPLv3

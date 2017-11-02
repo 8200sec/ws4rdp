@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+'use strict';
 var express = require('express');
 var http = require('http');
 
 var app = express();
-app.use(express.static(__dirname + '/html'));
+app.use(express.static('html'));
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/html/index.html');
 });
