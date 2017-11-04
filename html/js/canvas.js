@@ -18,7 +18,7 @@
  */
 
 (function() {
-	
+
 	/**
 	 * decompress bitmap from RLE algorithm
 	 * @param	bitmap	{object} bitmap object of bitmap event of node-rdpjs
@@ -41,12 +41,12 @@
 		default:
 			throw 'invalid bitmap data format';
 		}
-		
+
 		var input = new Uint8Array(bitmap.data);
 		var inputPtr = Module._malloc(input.length);
 		var inputHeap = new Uint8Array(Module.HEAPU8.buffer, inputPtr, input.length);
 		inputHeap.set(input);
-		
+
 		var output_width = bitmap.destRight - bitmap.destLeft + 1;
 		var output_height = bitmap.destBottom - bitmap.destTop + 1;
 		var ouputSize = output_width * output_height * 4;
@@ -59,15 +59,15 @@
 			['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 			[outputHeap.byteOffset, output_width, output_height, bitmap.width, bitmap.height, inputHeap.byteOffset, input.length]
 		);
-		
+
 		var output = new Uint8ClampedArray(outputHeap.buffer, outputHeap.byteOffset, ouputSize);
-		
+
 		Module._free(inputPtr);
 		Module._free(outputPtr);
-		
+
 		return { width : output_width, height : output_height, data : output };
 	}
-	
+
 	/**
 	 * Un compress bitmap are reverse in y axis
 	 */
@@ -83,7 +83,7 @@
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 	}
-	
+
 	Canvas.prototype = {
 		/**
 		 * update canvas with new bitmap
@@ -97,14 +97,14 @@
 			else {
 				output = reverse(bitmap);
 			}
-			
+
 			// use image data to use asm.js
 			var imageData = this.ctx.createImageData(output.width, output.height);
 			imageData.data.set(output.data);
 			this.ctx.putImageData(imageData, bitmap.destLeft, bitmap.destTop);
 		}
-	}
-	
+	};
+
 	/**
 	 * Module export
 	 */

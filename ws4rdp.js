@@ -31,7 +31,7 @@ module.exports = function (server) {
 			if (rdpClient) {
 				// clean older connection
 				rdpClient.close();
-			};
+			}
 
 			rdpClient = rdp.createClient({
 				domain : infos.domain,

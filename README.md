@@ -16,9 +16,9 @@ First of all, you must install the node and npm by yourself.
 ```bash
 npm i 
 ```
-### run in dev mode
+### run for test
 ```bash
-npm run-script dev 
+npm start 
 ```
 
 ### build the package
@@ -26,11 +26,6 @@ npm run-script dev
 npm run-script build
 ```
 
-#### tip:
-build the package for dev
-```bash
-pkg --output ws4rdp-dev --targets node8-macos-x64 --assets ["html/**/*"] dev.js
-```
 
 
 # License
