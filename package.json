@@ -24,6 +24,9 @@
   "bin": "index.js",
   "pkg": {
     "name": "ws4rdp",
+    "assets": [
+      "html/**/*"
+    ],
     "targets": [
       "node8-linux-x64",
       "node8-macos-x64",
