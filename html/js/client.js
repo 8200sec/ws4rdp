@@ -162,22 +162,15 @@
                 console.log('[mstsc.js] error : ' + err.code + '(' + err.message + ')');
                 self.activeSession = false;
             });
-            var ip = getQueryString('ip');
-            var username = getQueryString('username');
-            var domain = getQueryString('domain');
-            var password = getQueryString('password');
-            if (ip != null && username != null && domain != null && password != null) {
+            var token = getQueryString('token');
+            if (token != null) {
                 // emit infos event
                 this.socket.emit('infos', {
-                    ip: ip,
-                    port: 3389,
+                    token: token,
                     screen: {
                         width: this.canvas.width,
                         height: this.canvas.height
                     },
-                    username: username,
-                    domain: domain,
-                    password: password,
                     locale: Mstsc.locale()
                 });
             } else {

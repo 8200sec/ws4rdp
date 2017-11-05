@@ -18,60 +18,66 @@
  */
 
 var rdp = require('node-rdpjs');
-
+cocohost = process.env.coco || "http://127.0.0.1:7871";
 /**
  * Create proxy between rdp layer and socket io
  * @param server {http(s).Server} http server
  */
 module.exports = function (server) {
-	var io = require('socket.io')(server);
-	io.on('connection', function(client) {
-		var rdpClient = null;
-		client.on('infos', function (infos) {
-			if (rdpClient) {
-				// clean older connection
-				rdpClient.close();
-			}
+    var io = require('socket.io')(server);
+    io.on('connection', function (client) {
+        var rdpClient = null;
+        client.on('infos', function (infos) {
+            if (rdpClient) {
+                // clean older connection
+                rdpClient.close();
+            }
+            var request = require('request');
+            request(cocohost + '/rdp/?token=' + infos.token, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var res = JSON.parse(body);
 
-			rdpClient = rdp.createClient({
-				domain : infos.domain,
-				userName : infos.username,
-				password : infos.password,
-				enablePerf : true,
-				autoLogin : true,
-				screen : infos.screen,
-				locale : infos.locale,
-				logLevel : process.argv[2] || 'INFO'
-			}).on('connect', function () {
-				client.emit('rdp-connect');
-			}).on('bitmap', function(bitmap) {
-				client.emit('rdp-bitmap', bitmap);
-			}).on('close', function() {
-				client.emit('rdp-close');
-			}).on('error', function(err) {
-				client.emit('rdp-error', err);
-			}).connect(infos.ip, infos.port);
-		}).on('mouse', function (x, y, button, isPressed) {
-			if (!rdpClient)  return;
+                    rdpClient = rdp.createClient({
+                        domain: res.domain,
+                        userName: res.username,
+                        password: res.password,
+                        enablePerf: true,
+                        autoLogin: true,
+                        screen: {"width": 800, "height": 600},
+                        locale: infos.locale,
+                        logLevel: process.argv[2] || 'INFO'
+                    }).on('connect', function () {
+                        client.emit('rdp-connect');
+                    }).on('bitmap', function (bitmap) {
+                        client.emit('rdp-bitmap', bitmap);
+                    }).on('close', function () {
+                        client.emit('rdp-close');
+                    }).on('error', function (err) {
+                        client.emit('rdp-error', err);
+                    }).connect(res.ip, res.port);
+                }
+            }).end();
+        }).on('mouse', function (x, y, button, isPressed) {
+            if (!rdpClient) return;
 
-			rdpClient.sendPointerEvent(x, y, button, isPressed);
-		}).on('wheel', function (x, y, step, isNegative, isHorizontal) {
-			if (!rdpClient) {
-				return;
-			}
-			rdpClient.sendWheelEvent(x, y, step, isNegative, isHorizontal);
-		}).on('scancode', function (code, isPressed) {
-			if (!rdpClient) return;
+            rdpClient.sendPointerEvent(x, y, button, isPressed);
+        }).on('wheel', function (x, y, step, isNegative, isHorizontal) {
+            if (!rdpClient) {
+                return;
+            }
+            rdpClient.sendWheelEvent(x, y, step, isNegative, isHorizontal);
+        }).on('scancode', function (code, isPressed) {
+            if (!rdpClient) return;
 
-			rdpClient.sendKeyEventScancode(code, isPressed);
-		}).on('unicode', function (code, isPressed) {
-			if (!rdpClient) return;
+            rdpClient.sendKeyEventScancode(code, isPressed);
+        }).on('unicode', function (code, isPressed) {
+            if (!rdpClient) return;
 
-			rdpClient.sendKeyEventUnicode(code, isPressed);
-		}).on('disconnect', function() {
-			if(!rdpClient) return;
+            rdpClient.sendKeyEventUnicode(code, isPressed);
+        }).on('disconnect', function () {
+            if (!rdpClient) return;
 
-			rdpClient.close();
-		});
-	});
+            rdpClient.close();
+        });
+    });
 }
