@@ -163,7 +163,7 @@
                 self.activeSession = false;
             });
             var ip = getQueryString('ip');
-            var username = getQueryString('u');
+            var username = getQueryString('username');
             var domain = getQueryString('domain');
             var password = getQueryString('password');
             if (ip != null && username != null && domain != null && password != null) {
