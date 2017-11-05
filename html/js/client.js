@@ -162,22 +162,22 @@
                 console.log('[mstsc.js] error : ' + err.code + '(' + err.message + ')');
                 self.activeSession = false;
             });
-            var mid = getQueryString('mid');
+            var ip = getQueryString('ip');
             var username = getQueryString('u');
-            if (mid != null && username != null) {
+            var domain = getQueryString('domain');
+            var password = getQueryString('password');
+            if (ip != null && username != null && domain != null && password != null) {
                 // emit infos event
                 this.socket.emit('infos', {
-                    // ip : ip,
-                    // port : 3389,
+                    ip: ip,
+                    port: 3389,
                     screen: {
                         width: this.canvas.width,
                         height: this.canvas.height
                     },
-                    mid: mid,
                     username: username,
-                    // domain : domain,
-                    // username : username,
-                    // password : password,
+                    domain: domain,
+                    password: password,
                     locale: Mstsc.locale()
                 });
             } else {
@@ -192,6 +192,7 @@
         }
     }
 })();
+
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
