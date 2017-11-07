@@ -154,11 +154,12 @@
                 console.log('[mstsc.js] bitmap update bpp : ' + bitmap.bitsPerPixel);
                 self.render.update(bitmap);
             }).on('rdp-close', function () {
-                next(null);
+                // next(null);
                 console.log('[mstsc.js] close');
                 self.activeSession = false;
             }).on('rdp-error', function (err) {
-                next(err);
+                // next(err);
+                alert(err.code);
                 console.log('[mstsc.js] error : ' + err.code + '(' + err.message + ')');
                 self.activeSession = false;
             });
